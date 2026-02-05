@@ -1,0 +1,26 @@
+# Node
+node_modules/
+*.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+build/
+dist/
+out/
+
+.env
+.env.*
+
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+
+# Temporary folders
+tmp/
+temp/
+
+# Vite
+.vite/
