@@ -29,12 +29,18 @@ export async function apiFetch<T>(
   options?: RequestInit
 ): Promise<T> {
   try {
+    // Only set Content-Type header if there's a body
+    const headers: HeadersInit = {
+      ...options?.headers,
+    };
+
+    if (options?.body) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
       ...options,
+      headers,
     });
 
     // Handle 204 No Content
