@@ -42,7 +42,7 @@ export function TodoApp() {
   const addTodo = async (text: string) => {
     try {
       const newTodo = await todoApi.create(text);
-      setTodos((prev) => [...prev, newTodo]);
+      setTodos((prev) => [newTodo, ...prev]);
       closeAddDialog();
     } catch (error) {
       const message = error instanceof ApiError
