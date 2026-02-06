@@ -31,7 +31,36 @@ async function build (t) {
   return app
 }
 
+/**
+ * Build app with custom test database
+ * @param {object} t - Test context
+ * @param {object} testDb - Test database instance
+ * @returns {Promise<object>} - Fastify app with test database
+ */
+async function buildWithTestDb (t, testDb) {
+  const app = await build(t)
+
+  // Replace database instance directly (app already has db decorator from plugin)
+  // Close the production database that was opened by the plugin
+  if (app.db && app.db.open) {
+    app.db.close()
+  }
+
+  // Replace with test database
+  app.db = testDb
+
+  // Clean up test database after test
+  t.after(() => {
+    if (testDb && testDb.open) {
+      testDb.close()
+    }
+  })
+
+  return app
+}
+
 module.exports = {
   config,
-  build
+  build,
+  buildWithTestDb
 }
