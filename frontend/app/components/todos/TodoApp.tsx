@@ -1,42 +1,99 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Todo, TodoTab } from "~/types/todo";
 import { TodoList } from "./TodoList";
 import { TabBar } from "./TabBar";
 import { AddButton } from "./AddButton";
 import { AddTodoDialog } from "./AddTodoDialog";
 import { ConfirmDialog } from "./ConfirmDialog";
-
-// Generate UUID using Web Crypto API
-const generateId = () => crypto.randomUUID();
+import { ErrorDialog } from "./ErrorDialog";
+import { todoApi } from "~/api/todos";
+import { ApiError } from "~/api/client";
 
 export function TodoApp() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [currentTab, setCurrentTab] = useState<TodoTab>("active");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
 
-  // Business logic functions
-  const addTodo = (text: string) => {
-    const newTodo: Todo = {
-      id: generateId(),
-      text: text.trim(),
-      completed: false,
-      createdAt: Date.now(),
+  // Load todos on mount
+  useEffect(() => {
+    const loadTodos = async () => {
+      try {
+        const fetchedTodos = await todoApi.getAll();
+        setTodos(fetchedTodos);
+      } catch (error) {
+        const message = error instanceof ApiError
+          ? error.message
+          : "Failed to load todos";
+        setErrorMessage(message);
+        setIsErrorDialogOpen(true);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    setTodos((prev) => [...prev, newTodo]);
+
+    loadTodos();
+  }, []);
+
+  // Business logic functions with API integration
+  const addTodo = async (text: string) => {
+    try {
+      const newTodo = await todoApi.create(text);
+      setTodos((prev) => [...prev, newTodo]);
+      closeAddDialog();
+    } catch (error) {
+      const message = error instanceof ApiError
+        ? error.message
+        : "Failed to create todo";
+      setErrorMessage(message);
+      setIsErrorDialogOpen(true);
+    }
   };
 
-  const toggleTodo = (id: string) => {
+  const toggleTodo = async (id: number) => {
+    const previousTodos = todos;
+
+    // Optimistic update
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
+
+    try {
+      await todoApi.toggleComplete(id);
+    } catch (error) {
+      // Rollback on error
+      setTodos(previousTodos);
+      const message = error instanceof ApiError
+        ? error.message
+        : "Failed to update todo";
+      setErrorMessage(message);
+      setIsErrorDialogOpen(true);
+    }
   };
 
-  const deleteTodo = (id: string) => {
+  const deleteTodo = async (id: number) => {
+    const previousTodos = todos;
+
+    // Optimistic update
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
     setDeleteConfirmId(null);
+
+    try {
+      await todoApi.delete(id);
+    } catch (error) {
+      // Rollback on error
+      setTodos(previousTodos);
+      const message = error instanceof ApiError
+        ? error.message
+        : "Failed to delete todo";
+      setErrorMessage(message);
+      setIsErrorDialogOpen(true);
+    }
   };
 
   // Dialog control functions
@@ -45,15 +102,19 @@ export function TodoApp() {
 
   const handleAddTodo = (text: string) => {
     addTodo(text);
-    closeAddDialog();
   };
 
-  const openDeleteConfirm = (id: string) => setDeleteConfirmId(id);
+  const openDeleteConfirm = (id: number) => setDeleteConfirmId(id);
   const closeDeleteConfirm = () => setDeleteConfirmId(null);
   const confirmDelete = () => {
-    if (deleteConfirmId) {
+    if (deleteConfirmId !== null) {
       deleteTodo(deleteConfirmId);
     }
+  };
+
+  const closeErrorDialog = () => {
+    setIsErrorDialogOpen(false);
+    setErrorMessage(null);
   };
 
   // Derived state
@@ -75,11 +136,17 @@ export function TodoApp() {
           completedTodosCount={completedTodos.length}
         />
 
-        <TodoList
-          todos={displayedTodos}
-          onToggle={toggleTodo}
-          onDelete={openDeleteConfirm}
-        />
+        {isLoading ? (
+          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+            Loading...
+          </div>
+        ) : (
+          <TodoList
+            todos={displayedTodos}
+            onToggle={toggleTodo}
+            onDelete={openDeleteConfirm}
+          />
+        )}
 
         <AddButton onClick={openAddDialog} />
 
@@ -94,6 +161,12 @@ export function TodoApp() {
           message="Are you sure?"
           onConfirm={confirmDelete}
           onCancel={closeDeleteConfirm}
+        />
+
+        <ErrorDialog
+          isOpen={isErrorDialogOpen}
+          message={errorMessage || "An error occurred"}
+          onClose={closeErrorDialog}
         />
       </div>
     </div>
