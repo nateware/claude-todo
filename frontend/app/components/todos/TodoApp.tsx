@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import type { DragEndEvent } from "@dnd-kit/core";
 import type { Todo, TodoTab } from "~/types/todo";
 import { TodoList } from "./TodoList";
 import { TabBar } from "./TabBar";
@@ -96,6 +97,50 @@ export function TodoApp() {
     }
   };
 
+  const reorderTodo = async (id: number, fromIndex: number, toIndex: number) => {
+    const previousTodos = todos;
+
+    // Optimistic update - reorder in local state
+    const reorderedTodos = [...displayedTodos];
+    const [movedTodo] = reorderedTodos.splice(fromIndex, 1);
+    reorderedTodos.splice(toIndex, 0, movedTodo);
+
+    // Update full todos array with reordered items
+    setTodos((prev) => {
+      const otherTabTodos = prev.filter(
+        (todo) => todo.completed !== (currentTab === "active" ? false : true)
+      );
+      return [...reorderedTodos, ...otherTabTodos];
+    });
+
+    try {
+      await todoApi.reorder(id, fromIndex, toIndex);
+    } catch (error) {
+      // Rollback on error
+      setTodos(previousTodos);
+      const message = error instanceof ApiError
+        ? error.message
+        : "Failed to reorder todo";
+      setErrorMessage(message);
+      setIsErrorDialogOpen(true);
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = displayedTodos.findIndex((todo) => todo.id === active.id);
+    const newIndex = displayedTodos.findIndex((todo) => todo.id === over.id);
+
+    if (oldIndex !== -1 && newIndex !== -1) {
+      reorderTodo(active.id as number, oldIndex, newIndex);
+    }
+  };
+
   // Dialog control functions
   const openAddDialog = () => setIsAddDialogOpen(true);
   const closeAddDialog = () => setIsAddDialogOpen(false);
@@ -145,6 +190,7 @@ export function TodoApp() {
             todos={displayedTodos}
             onToggle={toggleTodo}
             onDelete={openDeleteConfirm}
+            onDragEnd={handleDragEnd}
           />
         )}
 

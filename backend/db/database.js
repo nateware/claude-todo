@@ -1,6 +1,7 @@
 const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
+const { applyMigrations } = require('./migrations');
 
 /**
  * Initialize SQLite database with schema
@@ -20,6 +21,9 @@ function initDatabase(dbPath) {
   // Read and execute schema
   const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   db.exec(schema);
+
+  // Apply any pending migrations
+  applyMigrations(db);
 
   return db;
 }

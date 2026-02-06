@@ -43,4 +43,17 @@ export const todoApi = {
     apiFetch<void>(`/api/todos/${id}`, {
       method: 'DELETE',
     }),
+
+  /**
+   * Reorder a todo within its list
+   * @param id - Todo ID
+   * @param fromIndex - Current position
+   * @param toIndex - Target position
+   * @returns Updated todo
+   */
+  reorder: (id: number, fromIndex: number, toIndex: number) =>
+    apiFetch<Todo>(`/api/todos/${id}/reorder`, {
+      method: 'PATCH',
+      body: JSON.stringify({ fromIndex, toIndex }),
+    }),
 };
