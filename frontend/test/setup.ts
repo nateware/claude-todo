@@ -6,6 +6,14 @@ import { server } from './mocks/server';
 // Extend Vitest matchers with jest-dom
 expect.extend(matchers);
 
+// Polyfill HTMLDialogElement methods for jsdom
+HTMLDialogElement.prototype.showModal = function() {
+  this.open = true;
+};
+HTMLDialogElement.prototype.close = function() {
+  this.open = false;
+};
+
 // MSW setup
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
