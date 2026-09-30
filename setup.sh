@@ -1,44 +1,90 @@
 #!/bin/bash
-# One-time setup for a new Mac: installs Homebrew and Node.js, then this app's packages.
-# Safe to run again; it skips anything already installed.
+# One-time setup: installs Node.js if needed, then this app's packages. Never needs sudo.
+#   - Node.js already installed and new enough: uses it.
+#   - Homebrew installed: installs Node.js with Homebrew.
+#   - Otherwise: downloads Node.js from nodejs.org into ~/.local/node (no admin rights needed).
+# Safe to run again.
 # Usage (from the project folder):  bash setup.sh
 set -e
 
 cd "$(dirname "$0")"
 
-echo "==> Setting up your Mac for this project. This can take 10-15 minutes."
+NODE_LTS=24                    # Node.js major version to download when there is no Homebrew
+NODE_HOME="$HOME/.local/node"
+# shellcheck disable=SC2016  # $HOME and $PATH should expand in each new Terminal, not now
+NODE_PATH_LINE='export PATH="$HOME/.local/node/bin:$PATH"'
 
-# 1. Homebrew (a tool that installs other tools)
-if ! command -v brew >/dev/null 2>&1; then
+# Add a line to ~/.zshrc once, so new Terminal windows can find Node.js
+add_to_zshrc() {
+  grep -qsF "$1" "$HOME/.zshrc" || echo "$1" >> "$HOME/.zshrc"
+}
+
+# This app needs Node.js 22.22.2+, 24.15+, or 26+
+node_ok() {
+  node -e '
+    const [a, b, c] = process.versions.node.split(".").map(Number);
+    const ok = (a === 22 && (b > 22 || (b === 22 && c >= 2))) || (a === 24 && b >= 15) || a >= 26;
+    process.exit(ok ? 0 : 1);
+  ' 2>/dev/null
+}
+
+install_node_download() {
+  local arch base sums file tmp
+  case "$(uname -m)" in arm64) arch=arm64 ;; *) arch=x64 ;; esac
+  base="https://nodejs.org/dist/latest-v$NODE_LTS.x"
+  sums=$(curl -fsSL "$base/SHASUMS256.txt")
+  file=$(echo "$sums" | grep -o "node-v[0-9.]*-darwin-$arch\.tar\.gz" | head -1)
+
+  echo "==> Downloading $file"
+  tmp=$(mktemp -d "${TMPDIR:-/tmp}/node-setup.XXXXXX")
+  curl -fL --progress-bar "$base/$file" -o "$tmp/$file"
+  (cd "$tmp" && echo "$sums" | grep " $file\$" | shasum -a 256 -c -s -)
+
+  rm -rf "$NODE_HOME"
+  mkdir -p "$NODE_HOME"
+  tar -xzf "$tmp/$file" -C "$NODE_HOME" --strip-components 1
+  rm -rf "$tmp"
+}
+
+echo "==> Setting up this project. This can take a few minutes."
+
+# Homebrew (optional): use it if it is installed
+BREW=$(command -v brew || true)
+for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  [ -z "$BREW" ] && [ -x "$b" ] && BREW=$b
+done
+if [ -n "$BREW" ]; then
+  eval "$("$BREW" shellenv)"
+  add_to_zshrc "eval \"\$($BREW shellenv)\""
+fi
+
+# Node.js downloaded by an earlier run of this script
+if [ -x "$NODE_HOME/bin/node" ]; then
+  export PATH="$NODE_HOME/bin:$PATH"
+  add_to_zshrc "$NODE_PATH_LINE"
+fi
+
+# Node.js (includes npm)
+if ! node_ok; then
   echo
-  echo "==> Installing Homebrew."
-  echo "    When asked for a password, type your Mac login password and press Return."
-  echo "    (Nothing appears on screen while you type. That is normal.)"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-# Make brew available now, and in every new Terminal window
-if [ -x /opt/homebrew/bin/brew ]; then
-  BREW=/opt/homebrew/bin/brew   # Apple Silicon Macs
-else
-  BREW=/usr/local/bin/brew      # Intel Macs
-fi
-eval "$("$BREW" shellenv)"
-if ! grep -qs 'brew shellenv' ~/.zshrc; then
-  echo "eval \"\$($BREW shellenv)\"" >> ~/.zshrc
-fi
-
-# 2. Node.js (includes npm). Also replaces a missing or too-old Node (this app needs 22, 24, or 26+).
-NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)
-if [ "$NODE_MAJOR" -lt 22 ] || [ "$NODE_MAJOR" -eq 23 ] || [ "$NODE_MAJOR" -eq 25 ]; then
-  echo
-  echo "==> Installing Node.js."
-  if brew list node >/dev/null 2>&1; then brew upgrade node; else brew install node; fi
+  if [ -n "$BREW" ]; then
+    echo "==> Installing Node.js with Homebrew."
+    if "$BREW" list node >/dev/null 2>&1; then "$BREW" upgrade node; else "$BREW" install node; fi
+  else
+    echo "==> Installing Node.js $NODE_LTS into $NODE_HOME"
+    install_node_download
+    export PATH="$NODE_HOME/bin:$PATH"
+    add_to_zshrc "$NODE_PATH_LINE"
+  fi
   hash -r
 fi
-echo "==> Using Node.js $(node --version)"
+if ! node_ok; then
+  echo "Error: could not set up a supported Node.js (found: $(node --version 2>/dev/null || echo none))."
+  exit 1
+fi
+echo "==> Using Node.js $(node --version) from $(command -v node)"
 
-# 3. This app's packages (backend and frontend). SQLite is included; nothing else to install.
+# This app's packages (backend and frontend). SQLite is included; nothing else to install.
 echo
 echo "==> Installing app packages."
 npm install

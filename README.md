@@ -123,19 +123,19 @@ claude-todo/
 
 ### New Mac (no coding experience needed)
 
-Your Mac account must be an administrator, because setup installs software.
+No administrator rights are needed.
 
 1. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return. Type each command below and press Return after it.
 2. **Download the code:**
    ```bash
    git clone https://github.com/nateware/claude-todo.git
    ```
-   On a brand-new Mac, a window pops up asking to install "command line developer tools". Click **Install**, wait for it to finish (a few minutes), then run the same `git clone` command again.
+   On a brand-new Mac, a window pops up asking to install "command line developer tools". Click **Install**, wait for it to finish (a few minutes), then run the same `git clone` command again. If it asks for an administrator password you don't have, ask IT to install Xcode Command Line Tools for you.
 3. **Go into the project folder:**
    ```bash
    cd claude-todo
    ```
-4. **Run setup (one time only).** This installs Homebrew and Node.js and takes 10-15 minutes. When it asks for a password, type your Mac login password. Nothing appears on screen as you type; that is normal.
+4. **Run setup (one time only).** This takes a few minutes.
    ```bash
    ./setup.sh
    ```
@@ -147,16 +147,16 @@ Your Mac account must be an administrator, because setup installs software.
 
 Next time, open Terminal and run `cd claude-todo` then `npm run dev`.
 
-### Already have Node.js?
+### What setup.sh does
 
-You need Node.js 22.22.2+ or 24.15+ (Node 23 and 25 don't work with the test tools). Skip `setup.sh` and run:
+It installs Node.js only if you don't already have a new enough version (22.22.2+, 24.15+, or 26+), then installs the app's packages. It never uses sudo.
 
-```bash
-git clone https://github.com/nateware/claude-todo.git
-cd claude-todo
-npm install
-npm run dev
-```
+- **Homebrew installed** (typical for engineers): installs or upgrades Node.js with Homebrew.
+- **No Homebrew:** downloads Node.js 24 from nodejs.org into `~/.local/node`.
+
+Either way it adds one line to `~/.zshrc` so new Terminal windows can find Node.js. It is safe to run again.
+
+To skip it, install a supported Node.js yourself and run `npm install` in the project folder.
 
 `npm run dev` starts both servers in one terminal:
 - Frontend: http://localhost:5173
