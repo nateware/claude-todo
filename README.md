@@ -137,7 +137,7 @@ Your Mac account must be an administrator, because setup installs software.
    ```
 4. **Run setup (one time only).** This installs Homebrew and Node.js and takes 10-15 minutes. When it asks for a password, type your Mac login password. Nothing appears on screen as you type; that is normal.
    ```bash
-   bash setup.sh
+   ./setup.sh
    ```
 5. **Start the app:**
    ```bash
