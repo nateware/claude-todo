@@ -5,7 +5,7 @@
 set -eo pipefail
 
 DOWNLOAD_URL="https://github.com/nateware/claude-todo/archive/refs/heads/main.tar.gz"
-DEFAULT_DIR="$HOME/Documents/claude-todo"
+DEFAULT_DIR="$HOME/claude-todo"
 
 # Ask where to put the project. Reads the keyboard even though this script arrives through curl.
 dir=""

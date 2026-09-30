@@ -131,10 +131,10 @@ No administrator rights or developer tools are needed.
    ```bash
    curl -fsSL https://raw.githubusercontent.com/nateware/claude-todo/main/install.sh | bash
    ```
-   When it asks where to put the project, press Return to use `~/Documents/claude-todo`. If macOS asks whether Terminal can access your Documents folder, click **Allow**. Setup takes a few minutes.
+   When it asks where to put the project, press Return to use `~/claude-todo`. Setup takes a few minutes.
 3. **Start the app.** Open a new Terminal window (Cmd+N) and run:
    ```bash
-   cd ~/Documents/claude-todo
+   cd ~/claude-todo
    npm run dev
    ```
    Open http://localhost:5173 in your browser. To stop the app, click in Terminal and press Control+C.
