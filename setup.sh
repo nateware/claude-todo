@@ -90,9 +90,9 @@ echo "==> Installing app packages."
 npm install
 
 echo
-echo "==> Setup complete. To start the app, run:"
+echo "==> Setup complete. To start the app, open a new Terminal window (Cmd+N) and run:"
 echo
+echo "cd \"$(pwd)\""
 echo "npm run dev"
 echo
 echo "Then open http://localhost:5173 in your browser."
-echo "If you open a new Terminal window first, run this in it:  cd \"$(pwd)\""

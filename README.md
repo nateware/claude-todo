@@ -99,8 +99,9 @@ claude-todo/
 │
 ├── plans/
 │   └── todo-app-implementation.md  # Complete implementation plan
+├── install.sh                 # Downloads the project, then runs setup.sh
 ├── package.json               # Root scripts: npm run dev, npm test
-└── setup.sh                   # One-time setup for a new Mac
+└── setup.sh                   # One-time setup: Node.js and app packages
 ```
 
 ## Tech Stack
@@ -123,29 +124,30 @@ claude-todo/
 
 ### New Mac (no coding experience needed)
 
-No administrator rights are needed.
+No administrator rights or developer tools are needed.
 
-1. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return. Type each command below and press Return after it.
-2. **Download the code:**
+1. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return.
+2. **Paste this line into Terminal and press Return:**
    ```bash
-   git clone https://github.com/nateware/claude-todo.git
+   curl -fsSL https://raw.githubusercontent.com/nateware/claude-todo/main/install.sh | bash
    ```
-   On a brand-new Mac, a window pops up asking to install "command line developer tools". Click **Install**, wait for it to finish (a few minutes), then run the same `git clone` command again. If it asks for an administrator password you don't have, ask IT to install Xcode Command Line Tools for you.
-3. **Go into the project folder:**
+   When it asks where to put the project, press Return to use `~/Documents/claude-todo`. If macOS asks whether Terminal can access your Documents folder, click **Allow**. Setup takes a few minutes.
+3. **Start the app.** Open a new Terminal window (Cmd+N) and run:
    ```bash
-   cd claude-todo
-   ```
-4. **Run setup (one time only).** This takes a few minutes.
-   ```bash
-   ./setup.sh
-   ```
-5. **Start the app:**
-   ```bash
+   cd ~/Documents/claude-todo
    npm run dev
    ```
    Open http://localhost:5173 in your browser. To stop the app, click in Terminal and press Control+C.
 
-Next time, open Terminal and run `cd claude-todo` then `npm run dev`.
+Next time, open Terminal and run the two commands in step 3.
+
+### Engineers
+
+```bash
+git clone https://github.com/nateware/claude-todo.git
+cd claude-todo
+./setup.sh
+```
 
 ### What setup.sh does
 
