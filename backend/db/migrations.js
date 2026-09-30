@@ -42,20 +42,32 @@ function applyMigration(db, migrationName, migrationPath) {
   // Use transaction for atomic migration
   const migrate = db.transaction(() => {
     db.exec(sql);
-    db.prepare('INSERT INTO migrations (name, applied_at) VALUES (?, ?)').run(
-      migrationName,
-      Date.now()
-    );
+    recordMigration(db, migrationName);
   });
 
   migrate();
 }
 
 /**
+ * Record a migration as applied without running it
+ * @param {Database} db - better-sqlite3 database instance
+ * @param {string} migrationName - Name of migration file
+ */
+function recordMigration(db, migrationName) {
+  db.prepare('INSERT INTO migrations (name, applied_at) VALUES (?, ?)').run(
+    migrationName,
+    Date.now()
+  );
+}
+
+/**
  * Apply all pending migrations
  * @param {Database} db - better-sqlite3 database instance
+ * @param {Object} [options]
+ * @param {boolean} [options.baseline] - Record pending migrations as applied without running them
+ *   (used for new databases, where schema.sql already reflects every migration)
  */
-function applyMigrations(db) {
+function applyMigrations(db, { baseline = false } = {}) {
   // Initialize migrations tracking table
   initMigrationsTable(db);
 
@@ -77,6 +89,10 @@ function applyMigrations(db) {
   // Apply pending migrations
   for (const file of migrationFiles) {
     if (!applied.has(file)) {
+      if (baseline) {
+        recordMigration(db, file);
+        continue;
+      }
       const migrationPath = path.join(migrationsDir, file);
       console.log(`Applying migration: ${file}`);
       applyMigration(db, file, migrationPath);

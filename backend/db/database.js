@@ -18,12 +18,17 @@ function initDatabase(dbPath) {
   // Create database connection
   const db = new Database(dbPath);
 
+  // A new database gets the current schema directly, so its migrations are already satisfied
+  const isNewDb = !db.prepare(
+    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'todos'"
+  ).get();
+
   // Read and execute schema
   const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   db.exec(schema);
 
   // Apply any pending migrations
-  applyMigrations(db);
+  applyMigrations(db, { baseline: isNewDb });
 
   return db;
 }

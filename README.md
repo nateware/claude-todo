@@ -132,33 +132,22 @@ claude-todo/
    cd claude-todo
    ```
 
-2. **Install backend dependencies**
+2. **Install all dependencies** (root, backend and frontend)
    ```bash
-   cd backend
-   npm install
-   ```
-
-3. **Install frontend dependencies**
-   ```bash
-   cd ../frontend
    npm install
    ```
 
 ### Running the Application
 
-1. **Start the backend** (Terminal 1)
-   ```bash
-   cd backend
-   npm run dev
-   ```
-   Backend runs on http://localhost:3000
+```bash
+npm run dev
+```
 
-2. **Start the frontend** (Terminal 2)
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   Frontend runs on http://localhost:5173
+This starts both servers in one terminal (Ctrl+C stops both):
+- Backend: http://localhost:3000
+- Frontend: http://localhost:5173
+
+No database setup is needed. The backend uses SQLite and creates `backend/data/todos.db` on first start. Delete that file to reset to an empty list.
 
 ### Running Tests
 
