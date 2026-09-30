@@ -120,6 +120,26 @@ claude-todo/
 
 ## Getting Started
 
+### Quick start on a new Mac (no coding experience needed)
+
+1. **Download the code.** On this project's GitHub page, click the green **Code** button, then **Download ZIP**. Open your Downloads folder and double-click the ZIP to unzip it.
+2. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return.
+3. **Go to the project folder.** Type this and press Return:
+   ```bash
+   cd ~/Downloads/claude-todo-main
+   ```
+4. **Run setup (one time only).** This installs Homebrew and Node.js, which takes 10-15 minutes. When it asks for a password, type your Mac login password. Nothing appears on screen as you type; that is normal.
+   ```bash
+   bash setup.sh
+   ```
+5. **Start the app:**
+   ```bash
+   npm run dev
+   ```
+   Then open http://localhost:5173 in your browser. Press Ctrl+C in Terminal to stop.
+
+Your Mac account must be an administrator to install Homebrew.
+
 ### Prerequisites
 - Node.js 22.22.2+ or 24.15+ (Node 23 and 25 are not supported by the test tooling)
 - npm 10.x or higher
