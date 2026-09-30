@@ -23,7 +23,7 @@ describe('apiFetch', () => {
   });
 
   test('sets Content-Type header when body present', async () => {
-    let receivedHeaders: Headers | null = null;
+    let receivedHeaders = null as Headers | null;
 
     server.use(
       http.post(`${API_BASE_URL}/test`, async ({ request }) => {
@@ -41,7 +41,7 @@ describe('apiFetch', () => {
   });
 
   test('omits Content-Type when no body', async () => {
-    let receivedHeaders: Headers | null = null;
+    let receivedHeaders = null as Headers | null;
 
     server.use(
       http.get(`${API_BASE_URL}/test`, ({ request }) => {

@@ -10,7 +10,7 @@ This project showcases how Claude can build a complete, production-ready applica
 - ✅ Frontend development (React + TypeScript)
 - ✅ Backend API implementation (Node.js + Fastify)
 - ✅ Database schema and migrations
-- ✅ Comprehensive test coverage (117 tests)
+- ✅ Comprehensive test coverage (120 tests)
 - ✅ Documentation
 
 ## Features
@@ -27,10 +27,10 @@ This project showcases how Claude can build a complete, production-ready applica
 
 ### Technical Highlights
 - **Type-safe** - Full TypeScript coverage
-- **Tested** - 46 backend + 71 frontend tests (117 total)
+- **Tested** - 49 backend + 71 frontend tests (120 total)
 - **Accessible** - Proper ARIA labels and keyboard navigation
 - **Responsive** - Mobile-friendly design
-- **Modern stack** - React 19, React Router 7, Tailwind CSS 4
+- **Modern stack** - React 19, React Router 8, Tailwind CSS 4
 
 ## How It Was Built
 
@@ -105,23 +105,23 @@ claude-todo/
 ## Tech Stack
 
 ### Backend
-- **Runtime**: Node.js 23.x
-- **Framework**: Fastify 5.0
+- **Runtime**: Node.js 22.22.2+ or 24.15+
+- **Framework**: Fastify 5.12
 - **Database**: SQLite with better-sqlite3
 - **Testing**: Node.js native test runner
 
 ### Frontend
-- **Framework**: React 19.2
-- **Router**: React Router 7.12
-- **Language**: TypeScript 5.9
-- **Styling**: Tailwind CSS 4.1
+- **Framework**: React 19.3
+- **Router**: React Router 8.4
+- **Language**: TypeScript 7.0
+- **Styling**: Tailwind CSS 4.3
 - **Drag & Drop**: @dnd-kit
 - **Testing**: Vitest + React Testing Library + MSW
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js 23.x or higher
+- Node.js 22.22.2+ or 24.15+ (Node 23 and 25 are not supported by the test tooling)
 - npm 10.x or higher
 
 ### Installation
@@ -151,7 +151,7 @@ No database setup is needed. The backend uses SQLite and creates `backend/data/t
 
 ### Running Tests
 
-**Backend tests** (46 tests)
+**Backend tests** (49 tests)
 ```bash
 cd backend
 npm test

@@ -1,10 +1,7 @@
-import { expect, afterEach, beforeAll, afterAll } from 'vitest';
+import { afterEach, beforeAll, afterAll } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import * as matchers from '@testing-library/jest-dom/matchers';
+import '@testing-library/jest-dom/vitest';
 import { server } from './mocks/server';
-
-// Extend Vitest matchers with jest-dom
-expect.extend(matchers);
 
 // Polyfill HTMLDialogElement methods for jsdom
 HTMLDialogElement.prototype.showModal = function() {
@@ -15,7 +12,7 @@ HTMLDialogElement.prototype.close = function() {
 };
 
 // MSW setup
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() => server.listen({ onUnhandledFrame: 'error' }));
 afterEach(() => {
   server.resetHandlers();
   cleanup();
