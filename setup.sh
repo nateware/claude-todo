@@ -46,7 +46,7 @@ npm install
 echo
 echo "==> Setup complete. To start the app, run:"
 echo
-echo "    npm run dev"
+echo "npm run dev"
 echo
-echo "    Then open http://localhost:5173 in your browser."
-echo "    If you open a new Terminal window first, run this in it:  cd \"$(pwd)\""
+echo "Then open http://localhost:5173 in your browser."
+echo "If you open a new Terminal window first, run this in it:  cd \"$(pwd)\""
