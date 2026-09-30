@@ -24,8 +24,8 @@ else
   BREW=/usr/local/bin/brew      # Intel Macs
 fi
 eval "$("$BREW" shellenv)"
-if ! grep -qs 'brew shellenv' ~/.zprofile; then
-  echo "eval \"\$($BREW shellenv)\"" >> ~/.zprofile
+if ! grep -qs 'brew shellenv' ~/.zshrc; then
+  echo "eval \"\$($BREW shellenv)\"" >> ~/.zshrc
 fi
 
 # 2. Node.js (includes npm). Also replaces a missing or too-old Node (this app needs 22, 24, or 26+).
