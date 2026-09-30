@@ -79,7 +79,7 @@ claude-todo/
 │   │   ├── api/
 │   │   │   ├── client.ts     # API client wrapper
 │   │   │   └── todos.ts      # Todo API methods
-│   │   ├── components/todos/
+│   │   ├── components/todos/     # Tests sit beside each file (*.test.tsx)
 │   │   │   ├── TodoApp.tsx          # Main container
 │   │   │   ├── TodoList.tsx         # List with drag-drop
 │   │   │   ├── TodoItem.tsx         # Individual item
@@ -94,12 +94,13 @@ claude-todo/
 │   │       └── todo.ts       # TypeScript types
 │   ├── test/
 │   │   ├── setup.ts          # Test configuration
-│   │   ├── mocks/            # MSW API mocks
-│   │   └── ...               # Component tests (71 tests)
+│   │   └── mocks/            # MSW API mocks
 │   └── vitest.config.ts      # Vitest configuration
 │
-└── plans/
-    └── todo-app-implementation.md  # Complete implementation plan
+├── plans/
+│   └── todo-app-implementation.md  # Complete implementation plan
+├── package.json               # Root scripts: npm run dev, npm test
+└── setup.sh                   # One-time setup for a new Mac
 ```
 
 ## Tech Stack
@@ -120,15 +121,21 @@ claude-todo/
 
 ## Getting Started
 
-### Quick start on a new Mac (no coding experience needed)
+### New Mac (no coding experience needed)
 
-1. **Download the code.** On this project's GitHub page, click the green **Code** button, then **Download ZIP**. Open your Downloads folder and double-click the ZIP to unzip it.
-2. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return.
-3. **Go to the project folder.** Type this and press Return:
+Your Mac account must be an administrator, because setup installs software.
+
+1. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return. Type each command below and press Return after it.
+2. **Download the code:**
    ```bash
-   cd ~/Downloads/claude-todo-main
+   git clone https://github.com/nateware/claude-todo.git
    ```
-4. **Run setup (one time only).** This installs Homebrew and Node.js, which takes 10-15 minutes. When it asks for a password, type your Mac login password. Nothing appears on screen as you type; that is normal.
+   On a brand-new Mac, a window pops up asking to install "command line developer tools". Click **Install**, wait for it to finish (a few minutes), then run the same `git clone` command again.
+3. **Go into the project folder:**
+   ```bash
+   cd claude-todo
+   ```
+4. **Run setup (one time only).** This installs Homebrew and Node.js and takes 10-15 minutes. When it asks for a password, type your Mac login password. Nothing appears on screen as you type; that is normal.
    ```bash
    bash setup.sh
    ```
@@ -136,53 +143,38 @@ claude-todo/
    ```bash
    npm run dev
    ```
-   Then open http://localhost:5173 in your browser. Press Ctrl+C in Terminal to stop.
+   Open http://localhost:5173 in your browser. To stop the app, click in Terminal and press Control+C.
 
-Your Mac account must be an administrator to install Homebrew.
+Next time, open Terminal and run `cd claude-todo` then `npm run dev`.
 
-### Prerequisites
-- Node.js 22.22.2+ or 24.15+ (Node 23 and 25 are not supported by the test tooling)
-- npm 10.x or higher
+### Already have Node.js?
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd claude-todo
-   ```
-
-2. **Install all dependencies** (root, backend and frontend)
-   ```bash
-   npm install
-   ```
-
-### Running the Application
+You need Node.js 22.22.2+ or 24.15+ (Node 23 and 25 don't work with the test tools). Skip `setup.sh` and run:
 
 ```bash
+git clone https://github.com/nateware/claude-todo.git
+cd claude-todo
+npm install
 npm run dev
 ```
 
-This starts both servers in one terminal (Ctrl+C stops both):
-- Backend: http://localhost:3000
+`npm run dev` starts both servers in one terminal:
 - Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
 
-No database setup is needed. The backend uses SQLite and creates `backend/data/todos.db` on first start. Delete that file to reset to an empty list.
+### Database
+
+No database setup is needed. The backend uses SQLite, which is included in its packages, and creates `backend/data/todos.db` on first start. Delete that file to reset to an empty list.
 
 ### Running Tests
 
-**Backend tests** (49 tests)
+From the project folder:
+
 ```bash
-cd backend
 npm test
 ```
 
-**Frontend tests** (71 tests)
-```bash
-cd frontend
-npm test          # Watch mode
-npm run test:run  # Single run
-```
+This runs the backend tests (49) and then the frontend tests (71). To re-run frontend tests as you edit files, run `npm test` inside `frontend/`.
 
 ## API Documentation
 
