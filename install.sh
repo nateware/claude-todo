@@ -25,4 +25,4 @@ else
 fi
 
 cd "$dir"
-./setup.sh
+./setup.sh --start

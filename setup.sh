@@ -4,7 +4,8 @@
 #   - Homebrew installed: installs Node.js with Homebrew.
 #   - Otherwise: downloads Node.js from nodejs.org into ~/.local/node (no admin rights needed).
 # Safe to run again.
-# Usage (from the project folder):  bash setup.sh
+# Usage (from the project folder):  ./setup.sh
+#   ./setup.sh --start   also starts the app and opens it in the browser
 set -e
 
 cd "$(dirname "$0")"
@@ -95,10 +96,32 @@ echo
 echo "==> Installing app packages."
 npm install --no-fund --loglevel=error   # show only real errors; warnings here alarm beginners
 
+APP_URL="http://localhost:5173"
+
+if [ "$1" = "--start" ]; then
+  echo
+  echo "==> Setup complete. Starting the app; your browser will open when it is ready."
+  echo "    To stop the app, press Control+C in this window."
+  echo "    To start it again later, open a new Terminal tab (Cmd+T) and run:"
+  echo
+  echo "cd \"$(pwd)\""
+  echo "npm run dev"
+  echo
+  # Open the browser once the app answers (gives up after 60 seconds)
+  (
+    for _ in $(seq 60); do
+      if curl -s -o /dev/null "$APP_URL"; then open "$APP_URL"; exit; fi
+      sleep 1
+    done
+  ) &
+  # Run the app in this window. Use the keyboard as input, since this script may arrive through curl.
+  if (exec < /dev/tty) 2>/dev/null; then exec npm run dev < /dev/tty; else exec npm run dev; fi
+fi
+
 echo
 echo "==> Setup complete. To start the app, open a new Terminal tab (Cmd+T) and run:"
 echo
 echo "cd \"$(pwd)\""
 echo "npm run dev"
 echo
-echo "Then open http://localhost:5173 in your browser."
+echo "Then open $APP_URL in your browser."

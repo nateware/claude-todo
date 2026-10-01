@@ -15,15 +15,16 @@ No administrator rights or developer tools are needed.
    ```bash
    curl -fsSL https://raw.githubusercontent.com/nateware/claude-todo/main/install.sh | bash
    ```
-   It puts the project in `~/claude-todo`. Setup takes a few minutes.
-3. **Start the app.** Open a new Terminal tab (Cmd+T) so it picks up the newly installed tools, then run:
-   ```bash
-   cd ~/claude-todo
-   npm run dev
-   ```
-   Open http://localhost:5173 in your browser. To stop the app, click in Terminal and press Control+C.
+   It puts the project in `~/claude-todo` and sets it up, which takes a few minutes. Then it starts the app and opens http://localhost:5173 in your browser.
 
-Next time, open Terminal and run the two commands in step 3.
+To stop the app, click in Terminal and press Control+C.
+
+**To start the app again later,** open a new Terminal tab (Cmd+T) and run:
+```bash
+cd ~/claude-todo
+npm run dev
+```
+Then open http://localhost:5173 in your browser.
 
 ### Engineers
 
@@ -35,7 +36,7 @@ cd claude-todo
 
 ### What the setup scripts do
 
-`install.sh` (the one-line command above) downloads the project into `~/claude-todo`, then runs `setup.sh`. If that folder already has the project, it uses it without overwriting anything.
+`install.sh` (the one-line command above) downloads the project into `~/claude-todo`, runs `setup.sh`, then starts the app and opens it in your browser. If that folder already has the project, it uses it without overwriting anything.
 
 `setup.sh` installs Node.js only if you don't already have a new enough version (22.22.2+, 24.15+, or 26+), then installs the app's packages. It never uses sudo.
 
