@@ -2,6 +2,8 @@
 
 A full-stack todo application **completely written by Claude** to demonstrate "hands off the wheel" development with AI assistance. In fact, even this README was written by Claude.
 
+**New to Claude Code?** Download it here: https://claude.com/product/claude-code
+
 ## Getting Started
 
 ### New Mac (no coding experience needed)
