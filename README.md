@@ -2,6 +2,68 @@
 
 A full-stack todo application **completely written by Claude** to demonstrate "hands off the wheel" development with AI assistance. In fact, even this README was written by Claude.
 
+## Getting Started
+
+### New Mac (no coding experience needed)
+
+No administrator rights or developer tools are needed.
+
+1. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return.
+2. **Paste this line into Terminal and press Return:**
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/nateware/claude-todo/main/install.sh | bash
+   ```
+   When it asks where to put the project, press Return to use `~/claude-todo`. Setup takes a few minutes.
+3. **Start the app.** Open a new Terminal window (Cmd+N) and run:
+   ```bash
+   cd ~/claude-todo
+   npm run dev
+   ```
+   Open http://localhost:5173 in your browser. To stop the app, click in Terminal and press Control+C.
+
+Next time, open Terminal and run the two commands in step 3.
+
+### Engineers
+
+```bash
+git clone https://github.com/nateware/claude-todo.git
+cd claude-todo
+./setup.sh
+```
+
+### What the setup scripts do
+
+`install.sh` (the one-line command above) downloads the project into the folder you choose, then runs `setup.sh`. If that folder already has the project, it uses it without overwriting anything.
+
+`setup.sh` installs Node.js only if you don't already have a new enough version (22.22.2+, 24.15+, or 26+), then installs the app's packages. It never uses sudo.
+
+- **Homebrew installed** (typical for engineers): installs or upgrades Node.js with Homebrew.
+- **No Homebrew:** downloads Node.js 24 from nodejs.org into `~/.local/node`.
+
+Either way it adds one line to `~/.zshrc` so new Terminal windows can find Node.js. It is safe to run again.
+
+To skip it, install a supported Node.js yourself and run `npm install` in the project folder.
+
+### Ports
+
+`npm run dev` starts both servers in one terminal:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
+
+### Database
+
+No database setup is needed. The backend uses SQLite, which is included in its packages, and creates `backend/data/todos.db` on first start. Delete that file to reset to an empty list.
+
+### Running Tests
+
+From the project folder:
+
+```bash
+npm test
+```
+
+This runs the backend tests (49) and then the frontend tests (71). To re-run frontend tests as you edit files, run `npm test` inside `frontend/`.
+
 ## What is this?
 
 This project showcases how Claude can build a complete, production-ready application from scratch with minimal human intervention. From initial planning to final testing, Claude handled:
@@ -119,64 +181,6 @@ claude-todo/
 - **Styling**: Tailwind CSS 4.3
 - **Drag & Drop**: @dnd-kit
 - **Testing**: Vitest + React Testing Library + MSW
-
-## Getting Started
-
-### New Mac (no coding experience needed)
-
-No administrator rights or developer tools are needed.
-
-1. **Open Terminal.** Press Cmd+Space, type `Terminal`, and press Return.
-2. **Paste this line into Terminal and press Return:**
-   ```bash
-   curl -fsSL https://raw.githubusercontent.com/nateware/claude-todo/main/install.sh | bash
-   ```
-   When it asks where to put the project, press Return to use `~/claude-todo`. Setup takes a few minutes.
-3. **Start the app.** Open a new Terminal window (Cmd+N) and run:
-   ```bash
-   cd ~/claude-todo
-   npm run dev
-   ```
-   Open http://localhost:5173 in your browser. To stop the app, click in Terminal and press Control+C.
-
-Next time, open Terminal and run the two commands in step 3.
-
-### Engineers
-
-```bash
-git clone https://github.com/nateware/claude-todo.git
-cd claude-todo
-./setup.sh
-```
-
-### What setup.sh does
-
-It installs Node.js only if you don't already have a new enough version (22.22.2+, 24.15+, or 26+), then installs the app's packages. It never uses sudo.
-
-- **Homebrew installed** (typical for engineers): installs or upgrades Node.js with Homebrew.
-- **No Homebrew:** downloads Node.js 24 from nodejs.org into `~/.local/node`.
-
-Either way it adds one line to `~/.zshrc` so new Terminal windows can find Node.js. It is safe to run again.
-
-To skip it, install a supported Node.js yourself and run `npm install` in the project folder.
-
-`npm run dev` starts both servers in one terminal:
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3000
-
-### Database
-
-No database setup is needed. The backend uses SQLite, which is included in its packages, and creates `backend/data/todos.db` on first start. Delete that file to reset to an empty list.
-
-### Running Tests
-
-From the project folder:
-
-```bash
-npm test
-```
-
-This runs the backend tests (49) and then the frontend tests (71). To re-run frontend tests as you edit files, run `npm test` inside `frontend/`.
 
 ## API Documentation
 
