@@ -2,7 +2,7 @@
   "name": "claude-todo",
   "private": true,
   "scripts": {
-    "postinstall": "npm install --prefix backend && npm install --prefix frontend",
+    "postinstall": "npm install --no-fund --prefix backend && npm install --no-fund --prefix frontend",
     "dev": "concurrently -k -n backend,frontend -c blue,magenta \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "test": "npm test --prefix backend && npm run test:run --prefix frontend"
   },

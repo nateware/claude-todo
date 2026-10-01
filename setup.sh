@@ -93,7 +93,7 @@ echo "==> Using Node.js $(node --version) from $(command -v node)"
 # This app's packages (backend and frontend). SQLite is included; nothing else to install.
 echo
 echo "==> Installing app packages."
-npm install
+npm install --no-fund --loglevel=error   # show only real errors; warnings here alarm beginners
 
 echo
 echo "==> Setup complete. To start the app, open a new Terminal tab (Cmd+T) and run:"
