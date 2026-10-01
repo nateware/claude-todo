@@ -16,7 +16,7 @@ No administrator rights or developer tools are needed.
    curl -fsSL https://raw.githubusercontent.com/nateware/claude-todo/main/install.sh | bash
    ```
    When it asks where to put the project, press Return to use `~/claude-todo`. Setup takes a few minutes.
-3. **Start the app.** Open a new Terminal window (Cmd+N) and run:
+3. **Start the app.** Open a new Terminal tab (Cmd+T) so it picks up the newly installed tools, then run:
    ```bash
    cd ~/claude-todo
    npm run dev
@@ -42,7 +42,7 @@ cd claude-todo
 - **Homebrew installed** (typical for engineers): installs or upgrades Node.js with Homebrew.
 - **No Homebrew:** downloads Node.js 24 from nodejs.org into `~/.local/node`.
 
-Either way it adds one line to `~/.zshrc` so new Terminal windows can find Node.js. It is safe to run again.
+It also adds lines to `~/.zshrc` so new Terminal tabs can find Node.js and anything in `~/.local/bin` (where Claude Code installs). It is safe to run again.
 
 To skip it, install a supported Node.js yourself and run `npm install` in the project folder.
 

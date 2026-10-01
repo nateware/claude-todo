@@ -13,8 +13,10 @@ NODE_LTS=24                    # Node.js major version to download when there is
 NODE_HOME="$HOME/.local/node"
 # shellcheck disable=SC2016  # $HOME and $PATH should expand in each new Terminal, not now
 NODE_PATH_LINE='export PATH="$HOME/.local/node/bin:$PATH"'
+# shellcheck disable=SC2016
+LOCAL_BIN_LINE='export PATH="$HOME/.local/bin:$PATH"'   # where per-user tools such as Claude Code install
 
-# Add a line to ~/.zshrc once, so new Terminal windows can find Node.js
+# Add a line to ~/.zshrc once, so new Terminal tabs and windows can find installed tools
 add_to_zshrc() {
   grep -qsF "$1" "$HOME/.zshrc" || echo "$1" >> "$HOME/.zshrc"
 }
@@ -58,6 +60,10 @@ if [ -n "$BREW" ]; then
   add_to_zshrc "eval \"\$($BREW shellenv)\""
 fi
 
+# Per-user tools folder (~/.local/bin)
+export PATH="$HOME/.local/bin:$PATH"
+add_to_zshrc "$LOCAL_BIN_LINE"
+
 # Node.js downloaded by an earlier run of this script
 if [ -x "$NODE_HOME/bin/node" ]; then
   export PATH="$NODE_HOME/bin:$PATH"
@@ -90,7 +96,7 @@ echo "==> Installing app packages."
 npm install
 
 echo
-echo "==> Setup complete. To start the app, open a new Terminal window (Cmd+N) and run:"
+echo "==> Setup complete. To start the app, open a new Terminal tab (Cmd+T) and run:"
 echo
 echo "cd \"$(pwd)\""
 echo "npm run dev"
