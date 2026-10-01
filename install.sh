@@ -5,19 +5,11 @@
 set -eo pipefail
 
 DOWNLOAD_URL="https://github.com/nateware/claude-todo/archive/refs/heads/main.tar.gz"
-DEFAULT_DIR="$HOME/claude-todo"
-
-# Ask where to put the project. Reads the keyboard even though this script arrives through curl.
-dir=""
-if (exec < /dev/tty) 2>/dev/null; then
-  read -r -p "Where should the project go? Press Return for $DEFAULT_DIR: " dir < /dev/tty || true
-fi
-dir="${dir:-$DEFAULT_DIR}"
-dir="${dir/#\~/$HOME}"
+dir="$HOME/claude-todo"
 
 if [ -e "$dir" ]; then
   if [ ! -x "$dir/setup.sh" ]; then
-    echo "Error: $dir already exists and is not this project. Run again and choose another folder."
+    echo "Error: $dir already exists and is not this project. Rename or move that folder, then run this again."
     exit 1
   fi
   echo "==> $dir already exists. Using it as is (nothing is overwritten)."
